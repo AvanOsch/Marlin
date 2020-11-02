@@ -144,12 +144,18 @@ bool MarlinUI::detected() { return true; }
         constexpr millis_t d = 0;
         constexpr uint8_t f = 0;
       #else
+        // Added optional delay for first animation image
+        #ifndef CUSTOM_BOOTSCREEN_ANIMATE_DELAY
+          #define CUSTOM_BOOTSCREEN_ANIMATE_DELAY CUSTOM_BOOTSCREEN_FRAME_TIME
+        #endif
         constexpr millis_t d = CUSTOM_BOOTSCREEN_FRAME_TIME;
         LOOP_L_N(f, COUNT(custom_bootscreen_animation))
       #endif
         {
           u8g.firstPage();
           do { draw_custom_bootscreen(f); } while (u8g.nextPage());
+          // Added optional delay for first animation image
+          if (f == 0) safe_delay(CUSTOM_BOOTSCREEN_ANIMATE_DELAY);
           if (d) safe_delay(d);
         }
 
